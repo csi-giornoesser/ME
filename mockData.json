@@ -1,0 +1,609 @@
+{
+  "refs": {
+    "statuts_dossier": ["nouveau", "en_cours", "en_attente", "a_corriger", "valide", "rejete"],
+    "statuts_ticket": ["Nouveau", "En cours", "Résolu", "Fermé"],
+    "types_pieces": ["CNI", "Passeport", "JustifDomicile", "RIB", "PermisConduire", "PhotoIdentite", "MandatSigne"],
+    "types_documents_generes": ["P0 Micro-Entrepreneur", "Preuve depot INPI", "Avis de situation SIRENE", "Attestation URSSAF", "Extrait RNE", "Recapitulatif Donnees", "Recu Paiement", "Mandat signé"],
+    "integrations": ["SaaS", "API", "iframe"],
+    "type_facturation": ["directe", "indirecte"],
+    "periodicite_versement": ["Mensuel", "Trimestriel"],
+    "client_steps": [
+      "Formulaire rempli",
+      "Pièces reçues",
+      "Mandat signé",
+      "Dossier transmis",
+      "Dossier en cours de traitement",
+      "SIREN attribué",
+      "Attestation à télécharger"
+    ],
+    "roles": ["admin", "operator", "partner_user", "client_user"],
+    "2fa_methods": ["totp", "sms", "email"],
+    "segments_partenaire": ["plateforme", "banque", "assurance", "autre"],
+    "motifs_refus_piece": ["floue", "périmée", "illisible", "nom non concordant", "format non accepté"],
+    "statuts_piece": ["valide", "en_attente", "refusee"],
+    "client_step_status": ["done", "current", "todo"],
+    "canaux_notification": ["email", "sms"],
+    "notification_types": ["relance_piece", "confirmation_depot", "dossier_incomplet", "validation_officielle", "rappel_inactivite"],
+    "scrape_status": ["pending", "running", "done", "failed"],
+    "rgpd_status": ["pending", "processing", "completed", "rejected"],
+    "service_paiement_statut": ["Payé", "En attente", "Échoué"],
+    "partner_commission_status": ["calculé", "facturé", "payé"],
+    "document_sources": ["systeme", "inpi", "urssaf", "rne"]
+  },
+
+  "operateurs": [
+    { "id": 1, "nom": "Julie Lefevre", "email": "julie@crm.local", "role": "operator", "2fa_enabled": true },
+    { "id": 2, "nom": "Karim Haddad", "email": "karim@crm.local", "role": "operator", "2fa_enabled": false },
+    { "id": 3, "nom": "Omar Ben Salem", "email": "omar@crm.local", "role": "admin", "2fa_enabled": true }
+  ],
+
+  "partenaires": [
+    {
+      "id": 1,
+      "nom": "Uber France",
+      "adresse": "145 Rue de Paris, 75010 Paris",
+      "referent": { "nom": "Jean Dupont", "email": "jean.dupont@uber.com", "telephone": "0700000001" },
+      "integration": "API",
+      "type_facturation": "indirecte",
+      "taux_commission": 5,
+      "segment": "plateforme",
+      "contrat": {
+        "date_signature": "2025-03-15",
+        "duree_mois": 24,
+        "statut": "actif",
+        "conditions_commerciales": "Net 30, volume > 50 dossiers/mois"
+      },
+      "paiement": {
+        "mode": "Virement",
+        "iban": "FR7612345678901234567890123",
+        "bic": "BNPAFRPPXXX"
+      },
+      "coordonnees_facturation": {
+        "societe": "Uber France",
+        "email_facturation": "billing@uber.com",
+        "adresse": "145 Rue de Paris, 75010 Paris"
+      },
+      "docs": {
+        "contrat_pdf": "Contrat_Uber.pdf",
+        "modalites_collaboration_pdf": "Modalites_Uber.pdf",
+        "documentation_tech": [
+          { "type": "API", "url": "https://docs.partner.example/api" },
+          { "type": "iframe", "url": "https://docs.partner.example/iframe" }
+        ]
+      },
+      "ca_total": 120000,
+      "commissions_total": 6000,
+      "ca_par_periode": [
+        { "periode": "2025-Q1", "ca": 30000, "dossiers": 18 },
+        { "periode": "2025-Q2", "ca": 90000, "dossiers": 52 }
+      ],
+      "factures": [
+        { "id": "F2025-001", "montant": 2000, "date": "2025-04-10", "statut": "Payée", "periode": "2025-Q1", "echeance": "2025-05-10", "pdf": "F2025-001.pdf" },
+        { "id": "F2025-002", "montant": 4000, "date": "2025-07-10", "statut": "En attente", "periode": "2025-Q2", "echeance": "2025-08-10", "pdf": "F2025-002.pdf" }
+      ],
+      "suivi": [
+        { "date": "2025-07-01", "type": "Appel", "note": "Relance trimestrielle" },
+        { "date": "2025-08-01", "type": "Réunion", "note": "Point partenariat et prévisionnel" }
+      ]
+    },
+    {
+      "id": 2,
+      "nom": "Deliveroo France",
+      "adresse": "99 Boulevard Haussmann, 75008 Paris",
+      "referent": { "nom": "Sarah Benali", "email": "sarah.benali@deliveroo.com", "telephone": "0700000002" },
+      "integration": "SaaS",
+      "type_facturation": "directe",
+      "taux_commission": 8,
+      "segment": "plateforme",
+      "contrat": {
+        "date_signature": "2025-02-01",
+        "duree_mois": 12,
+        "statut": "actif",
+        "conditions_commerciales": "Net 15, onboarding prioritaire"
+      },
+      "paiement": {
+        "mode": "Prélèvement",
+        "iban": "FR7699998888777766665555444",
+        "bic": "TRZOFRP1XXX"
+      },
+      "coordonnees_facturation": {
+        "societe": "Deliveroo France",
+        "email_facturation": "billing@deliveroo.com",
+        "adresse": "99 Boulevard Haussmann, 75008 Paris"
+      },
+      "docs": {
+        "contrat_pdf": "Contrat_Deliveroo.pdf",
+        "modalites_collaboration_pdf": "Modalites_Deliveroo.pdf",
+        "documentation_tech": [{ "type": "SaaS Guide", "url": "https://docs.partner.example/saas" }]
+      },
+      "ca_total": 80000,
+      "commissions_total": 6400,
+      "ca_par_periode": [
+        { "periode": "2025-Q1", "ca": 50000, "dossiers": 33 },
+        { "periode": "2025-Q2", "ca": 30000, "dossiers": 19 }
+      ],
+      "factures": [
+        { "id": "F2025-003", "montant": 3000, "date": "2025-05-15", "statut": "Payée", "periode": "2025-Q1", "echeance": "2025-06-15", "pdf": "F2025-003.pdf" }
+      ],
+      "suivi": [
+        { "date": "2025-06-20", "type": "Appel", "note": "Onboarding initial et validation flux" }
+      ]
+    },
+    {
+      "id": 3,
+      "nom": "Just Eat France",
+      "adresse": "21 Rue de Londres, 75009 Paris",
+      "referent": { "nom": "Laura Pinto", "email": "laura.pinto@justeat.com", "telephone": "0700000003" },
+      "integration": "iframe",
+      "type_facturation": "indirecte",
+      "taux_commission": 6,
+      "segment": "plateforme",
+      "contrat": { "date_signature": "2025-05-10", "duree_mois": 18, "statut": "actif", "conditions_commerciales": "Net 30, pas de minimum" },
+      "paiement": { "mode": "Virement", "iban": "FR7611112222333344445555666", "bic": "SOGEFRPPXXX" },
+      "coordonnees_facturation": { "societe": "Just Eat France", "email_facturation": "billing@justeat.com", "adresse": "21 Rue de Londres, 75009 Paris" },
+      "docs": { "contrat_pdf": "Contrat_JustEat.pdf", "modalites_collaboration_pdf": "Modalites_JustEat.pdf", "documentation_tech": [{ "type": "iframe", "url": "https://docs.partner.example/iframe" }] },
+      "ca_total": 25000,
+      "commissions_total": 1500,
+      "ca_par_periode": [{ "periode": "2025-Q2", "ca": 25000, "dossiers": 12 }],
+      "factures": [],
+      "suivi": [{ "date": "2025-07-05", "type": "Appel", "note": "Kickoff technique" }]
+    }
+  ],
+
+  "partner_users": [
+    { "id": "p1-u1", "partnerId": 1, "email": "ops@uber.com", "nom": "Ops Uber", "role": "partner_user", "2fa_enabled": true, "last_login_at": "2025-08-14T10:11:00Z" },
+    { "id": "p2-u1", "partnerId": 2, "email": "ops@deliveroo.com", "nom": "Ops Deliveroo", "role": "partner_user", "2fa_enabled": false, "last_login_at": "2025-08-10T08:00:00Z" },
+    { "id": "p3-u1", "partnerId": 3, "email": "ops@justeat.com", "nom": "Ops JustEat", "role": "partner_user", "2fa_enabled": true, "last_login_at": null }
+  ],
+
+  "faq": [
+    { "id": 1, "question": "Quels documents fournir ?", "reponse": "CNI/Passeport, justificatif de domicile, RIB, etc." },
+    { "id": 2, "question": "Combien de temps pour obtenir le SIREN ?", "reponse": "En général 3 à 10 jours ouvrés selon l’URSSAF et l’INPI." },
+    { "id": 3, "question": "Comment signer le mandat ?", "reponse": "Signature électronique via votre espace, section Mandat." }
+  ],
+  "guides": [
+    { "titre": "Guide démarrage micro-entreprise", "pdf": "Guide_Micro_Entreprise.pdf" },
+    { "titre": "Mentions légales & RGPD", "pdf": "Mentions_RGPD.pdf" }
+  ],
+
+  "clients": [
+    {
+      "id": 1,
+      "prenom": "Alice",
+      "nom": "Martin",
+      "email": "alice.martin@example.com",
+      "telephone": "0601020304",
+      "date_naissance": "1990-05-15",
+      "pays_naissance": "France",
+      "commune_naissance": "Grenoble",
+      "nationalite": "Française",
+      "situation_matrimoniale": "Célibataire",
+      "genre": "F",
+      "adresse_personnelle": { "ligne1": "46 Bd Maréchal Foch", "ligne2": "", "code_postal": "38100", "ville": "Grenoble", "pays": "FRANCE" },
+      "adresse_fiscale": { "est_differente": false, "ligne1": "46 Bd Maréchal Foch", "ligne2": "", "code_postal": "38100", "ville": "Grenoble", "pays": "FRANCE" },
+      "preferences_contact": { "email": true, "sms": true, "telephone": false },
+      "consentements_rgpd": { "conditions_generales": true, "politique_confidentialite": true, "partage_données_partenaire": true },
+      "numero_securite_sociale": "290051512345678",
+      "titulaireEntreprise": true,
+      "entrepriseId": 101,
+      "operateurAssigneId": 1,
+      "origine_partenaire_id": 1,
+      "portail": {
+        "token_acces": "tok_client_alice_123",
+        "magic_link_url": "https://app.example/suivi/tok_client_alice_123",
+        "token_expires_at": "2025-09-01T00:00:00Z",
+        "account_enabled": false,
+        "password_set": false,
+        "last_login_at": "2025-08-03T12:00:00Z"
+      },
+      "progress": [
+        { "step": 1, "label": "Formulaire rempli", "status": "done", "date": "2025-07-30" },
+        { "step": 2, "label": "Pièces reçues", "status": "done", "date": "2025-08-01" },
+        { "step": 3, "label": "Mandat signé", "status": "done", "date": "2025-08-01" },
+        { "step": 4, "label": "Dossier transmis", "status": "done", "date": "2025-08-03" },
+        { "step": 5, "label": "Dossier en cours de traitement", "status": "current", "date": "2025-08-03" },
+        { "step": 6, "label": "SIREN attribué", "status": "todo", "date": null },
+        { "step": 7, "label": "Attestation à télécharger", "status": "todo", "date": null }
+      ],
+      "date_estimee_finalisation": "2025-08-10",
+      "pieces_justificatives": [
+        { "type": "CNI", "fichier": "CNI_alice.pdf", "statut": "valide", "uploaded_at": "2025-07-30" },
+        { "type": "JustifDomicile", "fichier": "EDF_alice.pdf", "statut": "valide", "uploaded_at": "2025-07-30" },
+        { "type": "RIB", "fichier": "RIB_alice.pdf", "statut": "valide", "uploaded_at": "2025-07-30" },
+        { "type": "PermisConduire", "fichier": "Permis_Alice.pdf", "statut": "valide", "uploaded_at": "2025-07-30" },
+        { "type": "PhotoIdentite", "fichier": "Photo_Alice.jpg", "statut": "valide", "uploaded_at": "2025-07-30" },
+        { "type": "MandatSigne", "fichier": "Mandat_Alice.pdf", "statut": "valide", "uploaded_at": "2025-08-01" }
+      ],
+      "telechargements_disponibles": [
+        { "type": "Mandat signé", "fichier": "Mandat_Alice.pdf" },
+        { "type": "Recapitulatif Donnees", "fichier": "Recap_Alice.pdf" }
+      ],
+      "zone_echange": [
+        { "date": "2025-08-02", "from": "Client", "message": "Où en est mon dossier ?" },
+        { "date": "2025-08-03", "from": "Opérateur", "message": "En vérification URSSAF." }
+      ],
+      "historique_echanges": [
+        { "date": "2025-07-30", "type": "email", "note": "Confirmation dépôt" },
+        { "date": "2025-08-01", "type": "email", "note": "Notification dossier incomplet" }
+      ]
+    },
+    {
+      "id": 2,
+      "prenom": "Bob",
+      "nom": "Durand",
+      "email": "bob.durand@example.com",
+      "telephone": "0611223344",
+      "date_naissance": "1988-09-22",
+      "pays_naissance": "France",
+      "commune_naissance": "Lyon",
+      "nationalite": "Française",
+      "situation_matrimoniale": "Marié",
+      "genre": "M",
+      "adresse_personnelle": { "ligne1": "12 Rue des Capucins", "ligne2": "", "code_postal": "69001", "ville": "Lyon", "pays": "FRANCE" },
+      "adresse_fiscale": { "est_differente": true, "ligne1": "2 Rue de l'Impôt", "ligne2": "", "code_postal": "69003", "ville": "Lyon", "pays": "FRANCE" },
+      "preferences_contact": { "email": true, "sms": false, "telephone": true },
+      "consentements_rgpd": { "conditions_generales": true, "politique_confidentialite": true, "partage_données_partenaire": false },
+      "numero_securite_sociale": "188092212345678",
+      "titulaireEntreprise": true,
+      "entrepriseId": 102,
+      "operateurAssigneId": 2,
+      "origine_partenaire_id": 2,
+      "portail": {
+        "token_acces": "tok_client_bob_456",
+        "magic_link_url": "https://app.example/suivi/tok_client_bob_456",
+        "token_expires_at": "2025-09-01T00:00:00Z",
+        "account_enabled": true,
+        "password_set": true,
+        "last_login_at": "2025-07-23T08:30:00Z"
+      },
+      "progress": [
+        { "step": 1, "label": "Formulaire rempli", "status": "done", "date": "2025-07-20" },
+        { "step": 2, "label": "Pièces reçues", "status": "done", "date": "2025-07-20" },
+        { "step": 3, "label": "Mandat signé", "status": "done", "date": "2025-07-20" },
+        { "step": 4, "label": "Dossier transmis", "status": "done", "date": "2025-07-21" },
+        { "step": 5, "label": "Dossier en cours de traitement", "status": "done", "date": "2025-07-22" },
+        { "step": 6, "label": "SIREN attribué", "status": "done", "date": "2025-07-22" },
+        { "step": 7, "label": "Attestation à télécharger", "status": "done", "date": "2025-07-23" }
+      ],
+      "date_estimee_finalisation": "2025-07-23",
+      "pieces_justificatives": [
+        { "type": "Passeport", "fichier": "Passeport_bob.pdf", "statut": "valide", "uploaded_at": "2025-07-20" },
+        { "type": "RIB", "fichier": "RIB_bob.pdf", "statut": "valide", "uploaded_at": "2025-07-20" },
+        { "type": "PhotoIdentite", "fichier": "Photo_Bob.jpg", "statut": "valide", "uploaded_at": "2025-07-20" },
+        { "type": "MandatSigne", "fichier": "Mandat_Bob.pdf", "statut": "valide", "uploaded_at": "2025-07-20" }
+      ],
+      "telechargements_disponibles": [
+        { "type": "Attestation URSSAF", "fichier": "Attestation_URSSAF_Bob.pdf" },
+        { "type": "Extrait RNE", "fichier": "Extrait_RNE_Bob.pdf" },
+        { "type": "Recapitulatif Donnees", "fichier": "Recap_Bob.pdf" },
+        { "type": "Recu Paiement", "fichier": "Recu_Bob.pdf" }
+      ],
+      "zone_echange": [
+        { "date": "2025-07-21", "from": "Client", "message": "Photo envoyée." }
+      ],
+      "historique_echanges": [
+        { "date": "2025-07-22", "type": "email", "note": "Validation officielle reçue" }
+      ]
+    },
+    {
+      "id": 3,
+      "prenom": "Charlie",
+      "nom": "Moreau",
+      "email": "charlie.moreau@example.com",
+      "telephone": "0622334455",
+      "date_naissance": "1995-01-10",
+      "pays_naissance": "France",
+      "commune_naissance": "Marseille",
+      "nationalite": "Française",
+      "situation_matrimoniale": "Célibataire",
+      "genre": "M",
+      "adresse_personnelle": { "ligne1": "8 Rue Paradis", "ligne2": "", "code_postal": "13001", "ville": "Marseille", "pays": "FRANCE" },
+      "adresse_fiscale": { "est_differente": false, "ligne1": "8 Rue Paradis", "ligne2": "", "code_postal": "13001", "ville": "Marseille", "pays": "FRANCE" },
+      "preferences_contact": { "email": true, "sms": true, "telephone": true },
+      "consentements_rgpd": { "conditions_generales": true, "politique_confidentialite": true, "partage_données_partenaire": true },
+      "numero_securite_sociale": "195011012345678",
+      "titulaireEntreprise": true,
+      "entrepriseId": 103,
+      "operateurAssigneId": 2,
+      "origine_partenaire_id": 3,
+      "portail": { "token_acces": "tok_client_charlie_789", "magic_link_url": "https://app.example/suivi/tok_client_charlie_789", "token_expires_at": "2025-09-15T00:00:00Z", "account_enabled": false, "password_set": false, "last_login_at": null },
+      "progress": [
+        { "step": 1, "label": "Formulaire rempli", "status": "done", "date": "2025-08-05" },
+        { "step": 2, "label": "Pièces reçues", "status": "current", "date": "2025-08-06" },
+        { "step": 3, "label": "Mandat signé", "status": "todo", "date": null },
+        { "step": 4, "label": "Dossier transmis", "status": "todo", "date": null },
+        { "step": 5, "label": "Dossier en cours de traitement", "status": "todo", "date": null },
+        { "step": 6, "label": "SIREN attribué", "status": "todo", "date": null },
+        { "step": 7, "label": "Attestation à télécharger", "status": "todo", "date": null }
+      ],
+      "date_estimee_finalisation": "2025-08-20",
+      "pieces_justificatives": [
+        { "type": "CNI", "fichier": "CNI_charlie.pdf", "statut": "refusee", "motif_refus": "floue", "uploaded_at": "2025-08-06" },
+        { "type": "JustifDomicile", "fichier": "EDF_charlie.pdf", "statut": "valide", "uploaded_at": "2025-08-06" }
+      ],
+      "telechargements_disponibles": [],
+      "zone_echange": [
+        { "date": "2025-08-06", "from": "Opérateur", "message": "Votre CNI est floue, merci de renvoyer." }
+      ],
+      "historique_echanges": [
+        { "date": "2025-08-06", "type": "email", "note": "Pièce refusée (CNI floue)" }
+      ]
+    }
+  ],
+
+  "entreprises": [
+    {
+      "id": 101,
+      "titulaireClientId": 1,
+      "forme": "Micro-entrepreneur",
+      "denomination": "Alice Martin",
+      "statut_dossier": "en_cours",
+      "coordonnees_pro": { "email_pro": "alice.pro@example.com", "telephone_pro": "0701234567", "site_web": null },
+      "activite": { "description": "Chauffeur VTC", "categorie": "Services", "APE_NAF": "4939B", "profession_reglementee": true, "organisme_reference": "URSSAF", "categorie_admin": "Transports particuliers de personnes" },
+      "lieu_exercice": {
+        "type": "Domicile",
+        "adresse_etablissement": { "ligne1": "46 Bd Maréchal Foch", "ligne2": "", "code_postal": "38100", "ville": "Grenoble", "pays": "FRANCE" }
+      },
+      "dates": { "date_demande": "2025-07-30", "date_debut_activite": "2025-08-01", "date_immatriculation_reelle": null },
+      "options_sociales": { "regime": "Micro-social", "periodicite_versement": "Trimestriel", "organisme_assurance": "Régime général", "activite_anterieure": false, "activite_simultanee": false },
+      "options_fiscales": {
+        "franchise_TVA": true,
+        "numero_TVA_intracom": null,
+        "versement_liberatoire_IR": false,
+        "domiciliation_fiscale": "FR",
+        "comptabilite_simplifiee": true,
+        "seuils_micro": { "achat_revente": 188700, "services": 77700 }
+      },
+      "aides": { "ACRE_demande": true, "ACRE_statut": "En attente", "ACRE_date": null },
+      "banque": { "iban": "FR7612345678901234567890123", "bic": "BNPAFRPPXXX", "compte_dedie": true },
+      "assurance_pro": { "requise": true, "souscrite": true, "attestation": { "fichier": "Attestation_RCPro_Alice.pdf", "date": "2025-08-02" } },
+      "conjoint_collaborateur": { "declared": false, "nom": null, "prenom": null },
+      "donnees_gouvernement": {
+        "guichet_unique_INPI": { "numero_dossier": "GU-2025-ALICE-001", "etat": "En cours", "derniere_mise_a_jour": "2025-08-03", "url_suivi": "https://procedures.inpi.fr/...", "pieces_demandees": [] },
+        "INSEE_SIRENE": { "SIREN": "912345678", "SIRET_principal": "91234567800012", "code_APE": "4939B", "denomination": "Alice Martin", "avis_situation_sirene": { "fichier": "Avis_Sirene_Alice.pdf", "date_emission": "2025-08-05" } },
+        "URSSAF": { "affiliation": "En cours", "numero_affiliation": null, "attestation_affiliation": null },
+        "RNE": { "inscription": "Non publiée", "extrait_RNE": null }
+      },
+      "documents_generes": [
+        { "type": "P0 Micro-Entrepreneur", "fichier": "P0_Alice.pdf", "source": "systeme", "date": "2025-07-30" },
+        { "type": "Preuve depot INPI", "fichier": "Depot_INPI_Alice.pdf", "source": "inpi", "date": "2025-08-03" }
+      ],
+      "service_paiement": { "montant": 79, "devise": "EUR", "statut": "Payé", "moyen": "CB", "invoice_id": "FEE-ALICE-2025-07", "recu": "Recu_Alice.pdf" },
+      "checklist_conformite": { "piece_identite": "ok", "justificatif_domicile": "ok", "rib": "ok", "rc_pro": "ok", "declaration_non_condamnation": "ok" }
+    },
+    {
+      "id": 102,
+      "titulaireClientId": 2,
+      "forme": "Micro-entrepreneur",
+      "denomination": "Bob Durand",
+      "statut_dossier": "valide",
+      "coordonnees_pro": { "email_pro": "bob.pro@example.com", "telephone_pro": "0709876543", "site_web": "https://bob-courses.fr" },
+      "activite": { "description": "Livreur deux-roues", "categorie": "Services", "APE_NAF": "5320Z", "profession_reglementee": false, "organisme_reference": "URSSAF", "categorie_admin": "Coursiers/livraison" },
+      "lieu_exercice": {
+        "type": "Domicile",
+        "adresse_etablissement": { "ligne1": "12 Rue des Capucins", "ligne2": "", "code_postal": "69001", "ville": "Lyon", "pays": "FRANCE" }
+      },
+      "dates": { "date_demande": "2025-07-20", "date_debut_activite": "2025-07-25", "date_immatriculation_reelle": "2025-07-22" },
+      "options_sociales": { "regime": "Micro-social", "periodicite_versement": "Mensuel", "organisme_assurance": "Régime général", "activite_anterieure": false, "activite_simultanee": false },
+      "options_fiscales": {
+        "franchise_TVA": true,
+        "numero_TVA_intracom": null,
+        "versement_liberatoire_IR": true,
+        "domiciliation_fiscale": "FR",
+        "comptabilite_simplifiee": true,
+        "seuils_micro": { "achat_revente": 188700, "services": 77700 }
+      },
+      "aides": { "ACRE_demande": false, "ACRE_statut": "Non demandée", "ACRE_date": null },
+      "banque": { "iban": "FR7612345678900000000000000", "bic": "AGRIFRPPXXX", "compte_dedie": true },
+      "assurance_pro": { "requise": false, "souscrite": false, "attestation": null },
+      "conjoint_collaborateur": { "declared": false, "nom": null, "prenom": null },
+      "donnees_gouvernement": {
+        "guichet_unique_INPI": { "numero_dossier": "GU-2025-BOB-001", "etat": "Terminé", "derniere_mise_a_jour": "2025-07-22", "url_suivi": "https://procedures.inpi.fr/...", "pieces_demandees": [] },
+        "INSEE_SIRENE": { "SIREN": "934567890", "SIRET_principal": "93456789000023", "code_APE": "5320Z", "denomination": "Bob Durand", "avis_situation_sirene": { "fichier": "Avis_Sirene_Bob.pdf", "date_emission": "2025-07-22" } },
+        "URSSAF": { "affiliation": "Validée", "numero_affiliation": "UR-2025-7766", "attestation_affiliation": { "fichier": "Attestation_URSSAF_Bob.pdf", "date": "2025-07-22" } },
+        "RNE": { "inscription": "Publiée", "extrait_RNE": { "fichier": "Extrait_RNE_Bob.pdf", "date": "2025-07-23" } }
+      },
+      "documents_generes": [
+        { "type": "P0 Micro-Entrepreneur", "fichier": "P0_Bob.pdf", "source": "systeme", "date": "2025-07-20" },
+        { "type": "Attestation URSSAF", "fichier": "Attestation_URSSAF_Bob.pdf", "source": "urssaf", "date": "2025-07-22" },
+        { "type": "Extrait RNE", "fichier": "Extrait_RNE_Bob.pdf", "source": "rne", "date": "2025-07-23" },
+        { "type": "Recapitulatif Donnees", "fichier": "Recap_Bob.pdf", "source": "systeme", "date": "2025-07-23" },
+        { "type": "Recu Paiement", "fichier": "Recu_Bob.pdf", "source": "systeme", "date": "2025-07-23" }
+      ],
+      "service_paiement": { "montant": 79, "devise": "EUR", "statut": "Payé", "moyen": "CB", "invoice_id": "FEE-BOB-2025-07", "recu": "Recu_Bob.pdf" },
+      "checklist_conformite": { "piece_identite": "ok", "justificatif_domicile": "non_requis", "rib": "ok", "rc_pro": "non_requis", "declaration_non_condamnation": "ok" }
+    },
+    {
+      "id": 103,
+      "titulaireClientId": 3,
+      "forme": "Micro-entrepreneur",
+      "denomination": "Charlie Moreau",
+      "statut_dossier": "a_corriger",
+      "coordonnees_pro": { "email_pro": null, "telephone_pro": null, "site_web": null },
+      "activite": { "description": "Coursier", "categorie": "Services", "APE_NAF": "5320Z", "profession_reglementee": false, "organisme_reference": "URSSAF", "categorie_admin": "Coursiers/livraison" },
+      "lieu_exercice": { "type": "Domicile", "adresse_etablissement": { "ligne1": "8 Rue Paradis", "ligne2": "", "code_postal": "13001", "ville": "Marseille", "pays": "FRANCE" } },
+      "dates": { "date_demande": "2025-08-06", "date_debut_activite": "2025-08-10", "date_immatriculation_reelle": null },
+      "options_sociales": { "regime": "Micro-social", "periodicite_versement": "Mensuel", "organisme_assurance": "Régime général", "activite_anterieure": false, "activite_simultanee": false },
+      "options_fiscales": { "franchise_TVA": true, "numero_TVA_intracom": null, "versement_liberatoire_IR": false, "domiciliation_fiscale": "FR", "comptabilite_simplifiee": true, "seuils_micro": { "achat_revente": 188700, "services": 77700 } },
+      "aides": { "ACRE_demande": false, "ACRE_statut": "Non demandée", "ACRE_date": null },
+      "banque": { "iban": null, "bic": null, "compte_dedie": false },
+      "assurance_pro": { "requise": false, "souscrite": false, "attestation": null },
+      "conjoint_collaborateur": { "declared": false, "nom": null, "prenom": null },
+      "donnees_gouvernement": {
+        "guichet_unique_INPI": { "numero_dossier": null, "etat": "Non soumis", "derniere_mise_a_jour": null, "url_suivi": null, "pieces_demandees": ["CNI lisible"] },
+        "INSEE_SIRENE": { "SIREN": null, "SIRET_principal": null, "code_APE": "5320Z", "denomination": "Charlie Moreau", "avis_situation_sirene": null },
+        "URSSAF": { "affiliation": "Non démarrée", "numero_affiliation": null, "attestation_affiliation": null },
+        "RNE": { "inscription": "Non publiée", "extrait_RNE": null }
+      },
+      "documents_generes": [],
+      "service_paiement": { "montant": 79, "devise": "EUR", "statut": "En attente", "moyen": null, "invoice_id": null, "recu": null },
+      "checklist_conformite": { "piece_identite": "ko", "justificatif_domicile": "ok", "rib": "non_requis", "rc_pro": "non_requis", "declaration_non_condamnation": "todo" }
+    }
+  ],
+
+  "dossiers": [
+    {
+      "id": 201,
+      "clientId": 1,
+      "entrepriseId": 101,
+      "partenaireId": 1,
+      "operateurId": 1,
+      "statut": "en_cours",
+      "date_creation": "2025-07-30",
+      "derniere_modification": "2025-08-03",
+      "date_creation_effective": null,
+      "blocages": ["Attente affiliation URSSAF"],
+      "commission_partenaire_eur": 10,
+      "historique": [
+        { "date": "2025-07-30", "action": "Dossier créé" },
+        { "date": "2025-08-01", "action": "Pièces validées" },
+        { "date": "2025-08-03", "action": "Soumission INPI" }
+      ],
+      "mandat": { "signe": true, "fichier": "Mandat_Alice.pdf", "date": "2025-08-01" },
+      "exportable_csv": true
+    },
+    {
+      "id": 202,
+      "clientId": 2,
+      "entrepriseId": 102,
+      "partenaireId": 2,
+      "operateurId": 2,
+      "statut": "valide",
+      "date_creation": "2025-07-20",
+      "derniere_modification": "2025-07-23",
+      "date_creation_effective": "2025-07-22",
+      "blocages": [],
+      "commission_partenaire_eur": 10,
+      "historique": [
+        { "date": "2025-07-20", "action": "Dossier créé" },
+        { "date": "2025-07-22", "action": "Validation officielle reçue" },
+        { "date": "2025-07-23", "action": "RNE publié" }
+      ],
+      "mandat": { "signe": true, "fichier": "Mandat_Bob.pdf", "date": "2025-07-20" },
+      "exportable_csv": true
+    },
+    {
+      "id": 203,
+      "clientId": 3,
+      "entrepriseId": 103,
+      "partenaireId": 3,
+      "operateurId": 2,
+      "statut": "a_corriger",
+      "date_creation": "2025-08-06",
+      "derniere_modification": "2025-08-06",
+      "date_creation_effective": null,
+      "blocages": ["Pièce identité floue"],
+      "commission_partenaire_eur": 10,
+      "historique": [
+        { "date": "2025-08-06", "action": "Dossier créé" },
+        { "date": "2025-08-06", "action": "Pièce CNI refusée (floue)" }
+      ],
+      "mandat": { "signe": false, "fichier": null, "date": null },
+      "exportable_csv": true
+    }
+  ],
+
+  "tickets": [
+    {
+      "id": 1,
+      "dossierId": 201,
+      "statut": "En cours",
+      "priorite": "Haute",
+      "assigneOperateurId": 1,
+      "ouverture": "auto",
+      "source": "system/validation",
+      "historique": [
+        { "date": "2025-08-01", "message": "Ticket auto créé (pièce manquante)" },
+        { "date": "2025-08-02", "message": "Relance client envoyée" }
+      ]
+    },
+    {
+      "id": 2,
+      "dossierId": 202,
+      "statut": "Fermé",
+      "priorite": "Basse",
+      "assigneOperateurId": 2,
+      "ouverture": "manuelle",
+      "source": "operateur",
+      "historique": [
+        { "date": "2025-07-22", "message": "Validation reçue, fermeture ticket" }
+      ]
+    },
+    {
+      "id": 3,
+      "dossierId": 203,
+      "statut": "Nouveau",
+      "priorite": "Moyenne",
+      "assigneOperateurId": 2,
+      "ouverture": "auto",
+      "source": "validation/pièce",
+      "attachments": [{ "fichier": "CNI_charlie.pdf", "commentaire": "exemple flou" }],
+      "historique": [
+        { "date": "2025-08-06", "message": "Ticket auto (CNI floue)" }
+      ]
+    }
+  ],
+
+  "emails_automatiques": [
+    { "type": "confirmation_depot", "envoye_le": "2025-07-30", "clientId": 1, "dossierId": 201, "canal": "email" },
+    { "type": "dossier_incomplet", "envoye_le": "2025-08-01", "clientId": 1, "dossierId": 201, "canal": "email" },
+    { "type": "validation_officielle", "envoye_le": "2025-07-22", "clientId": 2, "dossierId": 202, "canal": "email" },
+    { "type": "rappel_inactivite", "envoye_le": "2025-08-04", "clientId": 1, "dossierId": 201, "canal": "sms" }
+  ],
+
+  "notifications_queue": [
+    { "id": "notif-1", "type": "relance_piece", "clientId": 1, "dossierId": 201, "canal": "email", "scheduled_for": "2025-08-06T09:00:00Z" }
+  ],
+
+  "scraping_jobs": [
+    { "id": "JOB-ALICE-001", "entrepriseId": 101, "portail": "INPI", "etat": "running", "last_event": "Formulaire soumis", "updated_at": "2025-08-03" },
+    { "id": "JOB-ALICE-URSSAF", "entrepriseId": 101, "portail": "URSSAF", "etat": "pending", "last_event": "En file d’attente", "updated_at": "2025-08-03" },
+    { "id": "JOB-BOB-URSSAF", "entrepriseId": 102, "portail": "URSSAF", "etat": "done", "last_event": "Attestation récupérée", "updated_at": "2025-07-22" }
+  ],
+
+  "partner_exports_history": [
+    { "id": "exp-uber-2025-07", "partnerId": 1, "format": "csv", "filtres": { "periode": "2025-07" }, "generated_at": "2025-08-01T08:00:00Z", "file": "export_uber_2025_07.csv" }
+  ],
+
+  "auth_logs": [
+    { "who": "p1-u1", "role": "partner_user", "action": "login", "success": true, "ip": "81.2.3.4", "at": "2025-08-14T10:11:00Z" },
+    { "who": "client:1", "role": "client_user", "action": "magic_link_login", "success": true, "ip": "81.2.3.5", "at": "2025-08-03T12:00:00Z" },
+    { "who": "omar@crm.local", "role": "admin", "action": "login", "success": true, "ip": "81.2.3.6", "at": "2025-08-12T09:00:00Z" }
+  ],
+
+  "audit_logs": [
+    { "actor": "omar@crm.local", "role": "admin", "action": "UPDATE", "resource": "dossier:201", "field": "statut", "from": "nouveau", "to": "en_cours", "at": "2025-07-30T10:00:00Z" },
+    { "actor": "julie@crm.local", "role": "operator", "action": "CREATE", "resource": "ticket:1", "at": "2025-08-01T08:00:00Z" }
+  ],
+
+  "rgpd_requests": [
+    { "id": "rgpd-1", "type": "export", "subject": "client:1", "status": "completed", "requested_at": "2025-08-05T09:00:00Z", "file": "export_rgpd_client1.zip" },
+    { "id": "rgpd-2", "type": "erasure", "subject": "client:2", "status": "pending", "requested_at": "2025-08-10T10:00:00Z" }
+  ],
+
+  "email_templates": [
+    { "key": "confirmation_depot", "sujet": "Votre dossier a bien été déposé", "variables": ["prenom", "dossierId"] },
+    { "key": "dossier_incomplet", "sujet": "Il manque un document à votre dossier", "variables": ["prenom", "piece", "lien_portail"] },
+    { "key": "validation_officielle", "sujet": "Bonne nouvelle : votre SIREN est attribué", "variables": ["prenom", "siren"] },
+    { "key": "rappel_inactivite", "sujet": "Petit rappel concernant votre dossier", "variables": ["prenom", "deadline"] }
+  ],
+
+  "webhooks_subscriptions": [
+    { "id": "wh-uber-1", "partnerId": 1, "url": "https://hooks.uber.com/lbf", "events": ["dossier.updated", "siren.assigned"], "secret": "whsec_***" },
+    { "id": "wh-deliv-1", "partnerId": 2, "url": "https://hooks.deliveroo.com/lbf", "events": ["invoice.created"], "secret": "whsec_***" }
+  ],
+  "webhooks_deliveries": [
+    { "id": "whd-1", "subscriptionId": "wh-uber-1", "event": "dossier.updated", "resourceId": "201", "status": "delivered", "attempts": 1, "last_at": "2025-08-03T12:00:00Z" },
+    { "id": "whd-2", "subscriptionId": "wh-deliv-1", "event": "invoice.created", "resourceId": "F2025-002", "status": "failed", "attempts": 3, "last_at": "2025-08-10T09:00:00Z", "last_error": "HTTP 500" }
+  ],
+
+  "partner_commission_runs": [
+    { "id": "cr-uber-2025-08", "partnerId": 1, "periode": "2025-08", "montant": 1800, "statut": "calculé", "echeance": "2025-09-10", "invoice_id": null },
+    { "id": "cr-deliv-2025-07", "partnerId": 2, "periode": "2025-07", "montant": 2200, "statut": "facturé", "echeance": "2025-08-15", "invoice_id": "F2025-003" }
+  ],
+
+  "metrics": {
+    "scrape": { "inpi": { "success_rate": 0.92, "p95_latency_s": 14 }, "urssaf": { "success_rate": 0.88, "p95_latency_s": 22 } },
+    "dossiers": { "temps_median_siren_jours": 4.5, "taux_dossiers_a_corriger": 0.18 }
+  }
+}
