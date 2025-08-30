@@ -1,0 +1,6 @@
+{
+  "/(crm)/crm/dashboard/page": "app/(crm)/crm/dashboard/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/alerts/route": "app/api/alerts/route.js",
+  "/api/dashboard/route": "app/api/dashboard/route.js"
+}
